@@ -1,0 +1,304 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   DESIGN TOKENS
+   Near-black base · off-white ink · one warm CAD/projector accent
+------------------------------------------------------------------- */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: rgb(var(--ink-rgb) / 0.12);
+  --color-line-2: rgb(var(--ink-rgb) / 0.06);
+  --color-accent: var(--accent);
+  --color-accent-dim: rgb(var(--accent-rgb) / 0.16);
+  --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+:root {
+  /* Palette tokens (defaults = "paper"; overridden at runtime by lib/theme.ts) */
+  --bg: #f4f1ea;
+  --bg-2: #ebe7de;
+  --bg-3: #e1dcd0;
+  --ink: #151518;
+  --ink-2: #5c5a55;
+  --ink-3: #948f86;
+  --accent: #e84b1f;
+  --accent-rgb: 232 75 31;
+  --ink-rgb: 21 21 24;
+  --surface: #d8d3c7;
+  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --nav-h: 72px;
+}
+
+/* Dark stage inserts: physically dark spaces keep dark tokens on light palettes */
+.stage-dark {
+  --bg: #0a0a0b;
+  --bg-2: #0f0f11;
+  --bg-3: #151517;
+  --ink: #ecebe6;
+  --ink-2: #a3a29c;
+  --ink-3: #67665f;
+  --ink-rgb: 236 235 230;
+  color: var(--ink);
+}
+html[data-light="1"] .grain {
+  opacity: 0.03;
+}
+
+/* ------------------------------------------------------------------
+   BASE
+------------------------------------------------------------------- */
+html {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--ink-3) var(--bg);
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  overflow-x: clip;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+/* ------------------------------------------------------------------
+   TYPOGRAPHY SYSTEM (Archivo variable: wdth 62–125, wght 100–900)
+------------------------------------------------------------------- */
+.t-display {
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" var(--wdth, 100), "wght" var(--wght, 600);
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+}
+.t-hero {
+  font-size: clamp(2.5rem, 7.3vw, 7.6rem);
+}
+.t-xl {
+  font-size: clamp(2.5rem, 6.6vw, 7rem);
+}
+.t-lg {
+  font-size: clamp(2rem, 4.4vw, 4.75rem);
+}
+.t-md {
+  font-size: clamp(1.5rem, 2.6vw, 2.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+.t-sm {
+  font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+.t-num {
+  --wdth: 62;
+  --wght: 500;
+  letter-spacing: -0.01em;
+}
+.t-wide {
+  --wdth: 125;
+}
+.t-outline {
+  -webkit-text-stroke: 1px rgb(var(--ink-rgb) / 0.7);
+  color: transparent;
+}
+.t-outline-accent {
+  -webkit-text-stroke: 1px var(--color-accent);
+  color: transparent;
+}
+.t-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+.t-body {
+  font-size: clamp(1rem, 1.05vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-ink-2);
+}
+.t-body-lg {
+  font-size: clamp(1.125rem, 1.5vw, 1.5rem);
+  line-height: 1.42;
+  letter-spacing: -0.01em;
+}
+.t-body strong,
+.t-body-lg strong {
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------
+   LAYOUT
+------------------------------------------------------------------- */
+.px-gutter {
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(0.75rem, 1.6vw, 1.5rem);
+}
+.hairline {
+  height: 1px;
+  background: var(--color-line);
+}
+
+/* ------------------------------------------------------------------
+   MOTION PRIMITIVES
+------------------------------------------------------------------- */
+.split-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.split-inner {
+  display: block;
+  will-change: transform;
+}
+.reveal-mask {
+  clip-path: inset(0 0 100% 0);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+.blink {
+  animation: blink 1.6s ease-in-out infinite;
+}
+@keyframes dash {
+  to { stroke-dashoffset: -40; }
+}
+.flow {
+  stroke-dasharray: 6 14;
+  animation: dash 1.2s linear infinite;
+}
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* ------------------------------------------------------------------
+   TEXTURE: subtle film grain over everything
+------------------------------------------------------------------- */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.055;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+}
+
+/* Blueprint grid used by DreamHomeTech surfaces */
+.blueprint {
+  background-image:
+    linear-gradient(rgb(var(--ink-rgb) / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Hide scrollbar for horizontal tracks */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blink,
+  .flow {
+    animation: none;
+  }
+}
+
+/* Manifesto setting: display family, sentence case, generous measure */
+.t-manifesto {
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" 100, "wght" 500;
+  font-size: clamp(1.5rem, 2.9vw, 2.9rem);
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+  color: var(--color-ink-2);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise {
+  animation: rise 0.7s var(--ease-expo) both;
+}
+
+@keyframes ripple {
+  0% { transform: scale(0.3); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.ripple {
+  animation: ripple 0.9s ease-out both;
+}
+
+@keyframes scanline {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+.scanline {
+  animation: scanline 1.6s linear infinite;
+}
